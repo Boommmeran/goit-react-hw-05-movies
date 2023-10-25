@@ -1,19 +1,29 @@
 import { useState, useEffect } from 'react';
-import { useParams } from "react-router-dom";
-import { findCast } from 'helpers/movies-servise';
+import { useParams } from 'react-router-dom';
+import Loader from 'components/Loader';
+import Error from 'components/Error';
+import { findCast } from 'helpers/moviesServise';
+import { CastList, CastItem } from './Cast.styled';
 
 const Cast = () => {
-  const [actors, setActors] = useState(null);
+  const [actors, setActors] = useState();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const { movieId } = useParams();
-  const defaultImg =
-    'https://ireland.apollo.olxcdn.com/v1/files/0iq0gb9ppip8-UA/image;s=1000x700';
+  const defaultImg = 'https://dummyimage.com/150x225/800000/800000.jpg';
 
   useEffect(() => {
     const searchCast = async () => {
       try {
+        setError(false);
+        setLoading(true);
         const { cast } = await findCast(movieId);
         setActors(cast);
-      } catch (error) {}
+      } catch (error) {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
     };
 
     searchCast();
@@ -21,10 +31,12 @@ const Cast = () => {
 
   return (
     <>
-      {actors && (
-        <ul>
+      {loading && <Loader />}
+      {error && <Error text={'Sorry something went wrong, please try again'} />}
+      {actors && actors.length !== 0 && (
+        <CastList>
           {actors.map(({ id, name, character, profile_path }) => (
-            <li key={id}>
+            <CastItem key={id}>
               <img
                 src={
                   profile_path
@@ -33,12 +45,19 @@ const Cast = () => {
                 }
                 alt="profile"
                 width="150"
+                height="225"
               />
               <p>{name}</p>
-              <p>{`Character: ${character}`}</p>
-            </li>
+              <p>Character:</p>
+              <p>{character}</p>
+            </CastItem>
           ))}
-        </ul>
+        </CastList>
+      )}
+      {actors && actors.length === 0 && (
+        <Error
+          text={'We don`t have any information about cast of this movie'}
+        />
       )}
     </>
   );

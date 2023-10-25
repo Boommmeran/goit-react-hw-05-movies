@@ -1,12 +1,14 @@
-import { Formik, Form, Field } from 'formik';
+import { Formik } from 'formik';
+import { StyledForm, Input, Button } from './SearchForm.styled';
+import { ImSearch } from 'react-icons/im';
 
-const SearchForm = ({onSubmit, query}) => {
+const SearchForm = ({ onSubmit }) => {
   return (
-    <Formik initialValues={{ query }} onSubmit={onSubmit}>
-      <Form>
-        <Field type="text" name="query" />
-        <button type="submit">Search</button>
-      </Form>
+    <Formik initialValues={{ query: '' }} onSubmit={onSubmit}>
+      <StyledForm>
+        <Input type="text" name="query" />
+        <Button type="submit">{<ImSearch />}</Button>
+      </StyledForm>
     </Formik>
   );
 };

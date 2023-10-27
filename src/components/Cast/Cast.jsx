@@ -48,8 +48,12 @@ const Cast = () => {
                 height="225"
               />
               <p>{name}</p>
-              <p>Character:</p>
-              <p>{character}</p>
+              {character && (
+                <>
+                  <p>Character:</p>
+                  <p>{character}</p>
+                </>
+              )}
             </CastItem>
           ))}
         </CastList>

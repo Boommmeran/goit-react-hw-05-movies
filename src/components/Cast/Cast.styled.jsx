@@ -15,4 +15,5 @@ export const CastItem = styled.li`
   flex-direction: column;
   align-items: center;
   gap: 5px;
+  text-align: center;
 `;
